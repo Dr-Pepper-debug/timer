@@ -1,0 +1,146 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>MUSIC TIMER</title>
+        <link href="https://fonts.googleapis.com/css?family=Caveat" rel="stylesheet">  
+        <style>
+            h1{
+                font-family: 'Caveat', cursive;   
+            }
+        </style>      
+    </head>
+    <body>
+        <h1>MUSIC TIMER</h1>
+        <hr>
+        <form name="timer" onSubmit="return false;">
+            <input type="text" name="counter" size="100"style="width:200px;height:100px;position:absolute;left:450px;top:100px;font-size:100px;">
+            <input type="button" name="b_start" size="100" value="スタート" style="width:100px;height:100px;position:absolute;left:450px;top:250px" onClick="count_start()">
+            <input type="button" name="b_reset" size="100" value="リセット" style="width:100px;height:100px;position:absolute;left:560px;top:250px" onclick="location.reload()">
+            <input type="button" size="100" value="3分" style="width:100px;height:100px;position:absolute;left:450px;top:370px" onClick="set_timer(180);start_music1()">
+            <input type="button" size="100" value="5分" style="width:100px;height:100px;position:absolute;left:560px;top:370px" onClick="set_timer(300);start_music2()">
+            <input type="button" name="b_reset" size="1000" value="+" style="width:100px;height:50px;position:absolute;left:670px;top:250px" onclick="volume_up1();volume_up2()">
+            <input type="button" name="b_reset" size="1000" value="-" style="width:100px;height:50px;position:absolute;left:670px;top:320px" onclick="volume_down1();volume_down2()">
+        </form>
+        <audio id="sound1" preload="auto">
+            <source src="mp3/Kagemusha.mp3" type="audio/mp3">
+        </audio>
+        <audio id="sound2" preload="auto">
+            <source src="mp3/Piano Man.mp3" type="audio/mp3">              
+        </audio>
+        <audio id="buzzer" preload="auto">
+            <source src="mp3/Buzzer.mp3" type="audio/mp3">              
+        </audio>
+        <script type="text/javascript">
+            //初期設定
+            def_count = 60;
+
+            timer_reset();
+
+            function timer_reset() {
+	        //タイマーの初期化
+	            timerID = 0;
+	            document.timer.counter.value = def_count;
+	            document.timer.b_start.disabled = false;
+            }
+
+            function set_timer(num) {
+	        //規定時間の設定
+	            if (timerID >= 0) {
+                    count_stop();
+	            }
+	            document.timer.counter.value = num;
+	            count_start();
+            }
+            
+            function count_start() {
+                //カウント開始
+                count = document.timer.counter.value;
+                document.timer.b_start.disabled = true;
+                timerID = setInterval('countdown()',1000);
+            }
+
+            function count_stop(){
+                //カウント停止
+                clearInterval(timerID);
+            }
+            function countdown() {
+                //カウント表示
+                count--;
+                document.timer.counter.value = count_format(count);
+                if (count <= 0){
+                    count_stop();
+                    buzzer();
+                }	
+            }
+
+            function count_format(num){
+                //カウント表示の書式設定
+                var tm, ts;
+                tm = Math.floor(num / 60); //分
+                ts = num % 60; //秒
+                if (ts < 10) ts = "0" + ts;
+                return tm + ":" + ts;
+            }            
+
+            function start_music1(){
+                //再生開始1
+                var audioObj = document.getElementById("sound1");
+                audioObj.currentTime = 0;
+                audioObj.play();
+            }
+
+            function stop_music1(){
+                //再生停止1
+                var audioObj = document.getElementById("sound1");
+                audioObj.currentTime = 0;
+                audioObj.pause();
+            }
+
+            function volume_up1(){
+                //音量アップ1
+                var audioObj = document.getElementById("sound1");
+                audioObj.volume = audioObj.volume + 0.1;
+            }
+
+            function volume_down1(){
+                //音量ダウン1
+                var audioObj = document.getElementById("sound1");
+                audioObj.volume = audioObj.volume - 0.1;
+            }
+
+            function start_music2(){
+                //再生開始2
+                var audioObj = document.getElementById("sound2");
+                audioObj.currentTime = 0;
+                audioObj.play();
+            }
+
+            function stop_music2(){
+                //再生停止2
+                var audioObj = document.getElementById("sound2");
+                audioObj.currentTime = 0;
+                audioObj.pause();
+            }
+
+            function volume_up2(){
+                //音量アップ2
+                var audioObj = document.getElementById("sound2");
+                audioObj.volume = audioObj.volume + 0.1;
+            }
+
+            function volume_down2(){
+                //音量ダウン2
+                var audioObj = document.getElementById("sound2");
+                audioObj.volume = audioObj.volume - 0.1;
+            }
+
+            function buzzer(){
+                //ブザー
+                var audioObj = document.getElementById("buzzer");
+                audioObj.play();
+            }
+
+            </script>
+    </body>
+</html>
